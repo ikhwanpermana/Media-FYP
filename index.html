@@ -1,82 +1,55 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <script src="https://jsdelivr.net"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FYPNews - Portal Berita Paling Viral & Populer Hari Ini</title>
-    <!-- Hubungkan ke Google Fonts agar tulisan terlihat modern dan premium -->
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        /* CSS RESET & VARIABEL UTAMA */
         :root {
-            --primary: #ff0050;      /* Warna Merah TikTok */
-            --secondary: #00f2fe;    /* Warna Biru Cyan Cyber */
-            --dark: #0f172a;         /* Warna Hitam Slate Gelap */
-            --light: #f8fafc;        /* Warna Putih Abu Terang */
-            --border: #e2e8f0;       /* Warna Garis Pembatas */
-            --text-main: #334155;    /* Warna Tulisan Utama */
+            --primary: #ff0050;      
+            --secondary: #00f2fe;    
+            --dark: #0f172a;         
+            --light: #f8fafc;        
+            --border: #e2e8f0;       
+            --text-main: #334155;    
         }
-        
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background-color: var(--light); color: var(--text-main); line-height: 1.6; }
-
-        /* HEADER & NAVIGASI */
         header { background-color: var(--dark); color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
-        .logo { font-size: 24px; font-weight: 800; tracking: -1px; text-decoration: none; color: white; }
+        .logo { font-size: 24px; font-weight: 800; text-decoration: none; color: white; }
         .logo span { color: var(--primary); }
-        .badge-live { background-color: var(--primary); color: white; font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: bold; animation: pulse 1.5s infinite; }
-
-        /* TATA LETAK UTAMA */
+        .badge-live { background-color: var(--primary); color: white; font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: bold; }
         .main-layout { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
         @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
-
-        /* SEKSI TRENDING FYP (SLIDER / CARD UTAMA) */
         .fyp-headline { grid-column: 1 / -1; margin-bottom: 20px; }
         .section-title { font-size: 22px; font-weight: 800; color: var(--dark); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
         .fyp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
-        
         .fyp-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid var(--border); transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
         .fyp-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(255, 0, 80, 0.08); border-color: var(--primary); }
         .fyp-card-body { padding: 25px; }
-
-        /* BADGE KATEGORI & VIEWS */
         .meta-tags { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .badge-cat { background: var(--dark); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .badge-cat.fyp { background: linear-gradient(45deg, var(--primary), #b9003a); }
-        .views-count { font-size: 12px; color: #64748b; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-
-        /* TEKS BERITA */
-        .news-title { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 12px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .news-desc { font-size: 14px; color: #64748b; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        /* TOMBOL PREMIUM */
+        .views-count { font-size: 12px; color: #64748b; font-weight: 600; }
+        .news-title { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 12px; line-height: 1.4; }
+        .news-desc { font-size: 14px; color: #64748b; margin-bottom: 20px; }
         .btn-premium { display: inline-block; width: 100%; text-align: center; background: var(--dark); color: white; padding: 12px; text-decoration: none; font-weight: 700; font-size: 14px; border-radius: 10px; transition: all 0.2s; border: 2px solid var(--dark); }
         .fyp-card:hover .btn-premium { background: var(--primary); border-color: var(--primary); }
-        .btn-premium:hover { opacity: 0.9; }
-
-        /* AREA FEED BERITA TERBARU */
         .news-list { display: flex; flex-direction: column; gap: 20px; }
-        .news-row { background: white; padding: 20px; border-radius: 12px; border-left: 5px solid var(--secondary); display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-
-        /* SLOT IKLAN PROFESIONAL (MONETISASI MAKSIMAL) */
+        .news-row { background: white; padding: 20px; border-radius: 12px; border-left: 5px solid var(--secondary); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .ad-wrapper { background: #f1f5f9; border: 2px dashed #cbd5e1; padding: 15px; text-align: center; border-radius: 12px; margin-bottom: 25px; position: relative; }
         .ad-label { position: absolute; top: -10px; left: 20px; background: #cbd5e1; color: #475569; font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px; letter-spacing: 1px; }
-
-        /* SIDEBAR (WIDGET KANAN) */
         .sidebar { display: flex; flex-direction: column; gap: 25px; }
         .widget { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid var(--border); }
         .widget-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
-
-        /* ANIMASI PULSA */
-        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
     </style>
+    <!-- 1. PUSTAKA RESMI SUPABASE VIA CDN (WAJIB ADA DI HEAD) -->
+    <script src="https://jsdelivr.net"></script>
 </head>
 <body>
 
-    <!-- NAVIGASI ATAS -->
     <header>
         <div class="nav-container">
             <a href="index.html" class="logo">⚡ FYP<span>News</span></a>
@@ -84,32 +57,24 @@
         </div>
     </header>
 
-    <!-- TATA LETAK PRO -->
     <div class="main-layout">
-        
-        <!-- SLOT IKLAN ATAS -->
         <div class="ad-wrapper" style="grid-column: 1 / -1; margin-bottom: 10px;">
             <span class="ad-label">SPONSORED ADVERTISEMENT</span>
-            <!-- Tempel Kode Google AdSense Di Sini Nanti -->
-            <div style="color: #94a3b8; font-size: 14px; padding: 20px 0; font-weight: 600;">SLOT BANNER ATAS 728x90 (PENGHASILAN TERTINGGI)</div>
+            <div style="color: #94a3b8; font-size: 14px; padding: 20px 0; font-weight: 600;">SLOT BANNER ATAS 728x90</div>
         </div>
 
-        <!-- KOLOM KIRI: AREA KONTEN BERITA -->
         <main>
-            <!-- BLOK KONTEN FYP (TRENDING UTAMA) -->
             <section class="fyp-headline">
                 <h2 class="section-title">🔥 SEDANG FYP HARI INI</h2>
                 <div id="loading-fyp" style="color: #64748b;">Mendeteksi algoritma tren viral...</div>
                 <div class="fyp-grid" id="konten-fyp"></div>
             </section>
 
-            <!-- SLOT IKLAN TENGAH -->
             <div class="ad-wrapper" style="margin: 30px 0;">
                 <span class="ad-label">ADVERTISEMENT</span>
-                <div style="color: #94a3b8; font-size: 14px; padding: 15px 0; font-weight: 600;">IKLAN SPONSOR DALAM ARTIKEL (NATIVE AD)</div>
+                <div style="color: #94a3b8; font-size: 14px; padding: 15px 0; font-weight: 600;">IKLAN SPONSOR DALAM ARTIKEL</div>
             </div>
 
-            <!-- BLOK KONTEN TERBARU -->
             <section>
                 <h2 class="section-title">🕒 BERITA TERKINI</h2>
                 <div id="loading-semua" style="color: #64748b;">Sinkronisasi berita global...</div>
@@ -117,113 +82,106 @@
             </section>
         </main>
 
-        <!-- KOLOM KANAN: SIDEBAR WIDGET -->
         <aside class="sidebar">
             <div class="widget">
                 <h3 class="widget-title">Tentang Portal Ini</h3>
-                <p style="font-size: 13px; color: #64748b;">FYPNews adalah media berita online masa kini yang beroperasi 100% menggunakan sistem kecerdasan bot otomatis. Menyajikan konten paling viral langsung dari pusat internet [2.2, 2.3].</p>
-            </div>
-            
-            <div class="widget">
-                <h3 class="widget-title">Sponsor Utama</h3>
-                <div class="ad-wrapper" style="margin-bottom: 0; padding: 40px 10px;">
-                    <span class="ad-label">DIRECT ADS</span>
-                    <a href="https://wa.me" target="_blank" style="text-decoration:none; color:#94a3b8; font-size:12px; font-weight:bold;">RUANG IKLAN MANDIRI<br>HUBUNGI ADMIN</a>
-                </div>
+                <p style="font-size: 13px; color: #64748b;">FYPNews adalah media berita online masa kini yang beroperasi 100% menggunakan sistem kecerdasan bot otomatis [2.2, 2.3].</p>
             </div>
         </aside>
-
     </div>
 
-    <!-- JAVASCRIPT KONEKSI SUPABASE -->
+    <!-- 2. JAVASCRIPT ENGINE UTAMA -->
     <script>
-    // Kredensial Resmi Berita FYP Anda
-const SUPABASE_URL = "https://mqxpzsnunxfpizajvsrd.supabase.co";
-const SUPABASE_KEY = "sb_publishable_utk5tYzDqTO2t5hXTj6nCQ_lClwsTAl";
+        const SUPABASE_URL = "https://supabase.co";
+        const SUPABASE_KEY = "sb_publishable_utk5tYzDqTO2t5hXTj6nCQ_lClwsTAl";
 
-// Inisialisasi Klien Supabase Resmi via CDN
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 1. AMBIL BERITA VIRAL (VIEWS TERTINGGI)
-async function ambilBeritaFYP() {
-    try {
-        const { data, error } = await supabase
-            .from('articles')
-            .select('*')
-            .order('views', { ascending: false })
-            .limit(3);
-
-        if (error) throw error;
-
-        document.getElementById('loading-fyp').style.display = 'none';
-        let html = '';
-        if (!data || data.length === 0) {
-            document.getElementById('konten-fyp').innerHTML = "<p style='color:#64748b;'>Menunggu bot menyuplai berita viral...</p>";
-            return;
+        async function ambilBeritaFYP() {
+            try {
+                const { data, error } = await _supabase.from('articles').select('*').order('views', { ascending: false }).limit(3);
+                if (error) throw error;
+                document.getElementById('loading-fyp').style.display = 'none';
+                let html = '';
+                if (!data || data.length === 0) {
+                    document.getElementById('konten-fyp').innerHTML = "<p style='color:#64748b;'>Menunggu bot menyuplai berita viral...</p>";
+                    return;
+                }
+                data.forEach(berita => {
+                    html += `
+                        <div class="fyp-card">
+                            <div class="fyp-card-body">
+                                <div class="meta-tags">
+                                    <span class="badge-cat fyp">⚡ FYP TRENDING</span>
+                                    <span class="views-count">👁️ ${berita.views || 0} Klik</span>
+                                </div>
+                                <h3 class="news-title">${berita.title}</h3>
+                                <p class="news-desc">${berita.content ? berita.content.substring(0, 110) : ''}...</p>
+                            </div>
+                            <div style="padding: 0 25px 25px 25px;">
+                                <a href="baca.html?id=${berita.id}" class="btn-premium">Baca Selengkapnya</a>
+                            </div>
+                        </div>`;
+                });
+                document.getElementById('konten-fyp').innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                document.getElementById('loading-fyp').innerHTML = "<span style='color:red;'>Gagal sinkronisasi data tren.</span>";
+            }
         }
-        
-        data.forEach(berita => {
-            html += `
-                <div class="fyp-card">
-                    <div class="fyp-card-body">
-                        <div class="meta-tags">
-                            <span class="badge-cat fyp">⚡ FYP TRENDING</span>
-                            <span class="views-count">👁️ ${berita.views || 0} Klik</span>
-                        </div>
-                        <h3 class="news-title">${berita.title}</h3>
-                        <p class="news-desc">${berita.content ? berita.content.substring(0, 110) : ''}...</p>
-                    </div>
-                    <div style="padding: 0 25px 25px 25px;">
-                        <a href="baca.html?id=${berita.id}" class="btn-premium">Baca Selengkapnya</a>
-                    </div>
-                </div>
-            `;
-        });
-        document.getElementById('konten-fyp').innerHTML = html;
-    } catch (error) {
-        console.error(error);
-        document.getElementById('loading-fyp').innerHTML = "<span style='color:red;'>Gagal sinkronisasi data tren.</span>";
-    }
-}
 
-// 2. AMBIL SEMUA DAFTAR BERITA TERBARU
-async function ambilSemuaBerita() {
-    try {
-        const { data, error } = await supabase
-            .from('articles')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        document.getElementById('loading-semua').style.display = 'none';
-        let html = '';
-        if(!data || data.length === 0) {
-            document.getElementById('konten-semua').innerHTML = '<p style="color:#64748b;">Belum ada kiriman berita terbaru hari ini.</p>';
-            return;
+        async function ambilSemuaBerita() {
+            try {
+                const { data, error } = await _supabase.from('articles').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                document.getElementById('loading-semua').style.display = 'none';
+                let html = '';
+                if(!data || data.length === 0) {
+                    document.getElementById('konten-semua').innerHTML = "<p style='color:#64748b;'>Belum ada kiriman berita terbaru hari ini.</p>";
+                    return;
+                }
+                data.forEach(berita => {
+                    html += `
+                        <div class="news-row">
+                            <div class="meta-tags" style="margin-bottom: 5px;">
+                                <span class="badge-cat">${berita.category || 'VIRAL'}</span>
+                            </div>
+                            <h3 class="news-title" style="font-size:16px; margin-bottom:5px;">${berita.title}</h3>
+                            <a href="baca.html?id=${berita.id}" style="color:var(--primary); font-size:13px; font-weight:700; text-decoration:none;">Buka Artikel →</a>
+                        </div>`;
+                });
+                document.getElementById('konten-semua').innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                document.getElementById('loading-semua').innerHTML = "<span style='color:red;'>Gagal memuat lini masa berita.</span>";
+            }
         }
-        data.forEach(berita => {
-            html += `
-                <div class="news-row">
-                    <div class="meta-tags" style="margin-bottom: 5px;">
-                        <span class="badge-cat">${berita.category || 'VIRAL'}</span>
-                        <span style="font-size:11px; color:#94a3b8; font-weight:600;">🌐 GLOBAL RELEASES</span>
-                    </div>
-                    <h3 class="news-title" style="font-size:16px; margin-bottom:5px;">${berita.title}</h3>
-                    <a href="baca.html?id=${berita.id}" style="color:var(--primary); font-size:13px; font-weight:700; text-decoration:none;">Buka Artikel →</a>
-                </div>
-            `;
-        });
-        document.getElementById('konten-semua').innerHTML = html;
-    } catch (error) {
-        console.error(error);
-        document.getElementById('loading-semua').innerHTML = "<span style='color:red;'>Gagal memuat lini masa berita.</span>";
-    }
-}
 
-// Jalankan Otomatis
-ambilBeritaFYP();
-ambilSemuaBerita();
+        ambilBeritaFYP();
+        ambilSemuaBerita();
+    </script>
 
+    <!-- 3. KODE PIKSEL ASLI ADROLL ANDA -->
+    <script type="text/javascript">
+        adroll_adv_id = "O6EY6PVNPJD73FTVPMDXXK";
+        adroll_pix_id = "4RGDQOQQ7NCGXLCOE7WEIW";
+        adroll_version = "2.0";
+        (function(w, d, e, o, a) {
+            w.adroll_tag_source = w.adroll_tag_source || "manual";
+            w.__adroll_loaded = true;
+            w.adroll = w.adroll || [];
+            w.adroll.f = [ 'setProperties', 'identify', 'track', 'identify_email', 'get_cookie' ];
+            var roundtripUrl = "https://adroll.com" + adroll_adv_id + "/roundtrip.js";
+            for (a = 0; a < w.adroll.f.length; a++) {
+                w.adroll[w.adroll.f[a]] = w.adroll[w.adroll.f[a]] || (function(n) { return function() { w.adroll.push([ n, arguments ]) } })(w.adroll.f[a])
+            }
+            e = d.createElement('script');
+            o = d.getElementsByTagName('script')[0];
+            e.async = 1;
+            e.src = roundtripUrl;
+            o.parentNode.insertBefore(e, o);
+        })(window, document);
+        adroll.track("pageView");
+    </script>
 </body>
 </html>
