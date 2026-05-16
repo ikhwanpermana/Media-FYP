@@ -3,23 +3,23 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Pecah data berdasarkan kode postgresql Anda
+$host     = 'db.mqxpzsnunxfpizajvsrd.supabase.co';
+$port     = '5432';
+$dbname   = 'postgres';
+$user     = 'postgres';
+$password = 'sidratulmuntaha'; // <-- Ganti dengan password akun Supabase Anda
+
 try {
-    // Membuat file database otomatis di dalam folder proyek Anda
-    $db = new PDO("sqlite:" . __DIR__ . "/database_fyp.sqlite");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-    // Otomatis membuat tabel berita jika belum ada
-    $db->exec("CREATE TABLE IF NOT EXISTS articles (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        category TEXT,
-        content TEXT,
-        views INTEGER DEFAULT 0,
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )");
-
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $db = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+    
+    // Teks konfirmasi (bisa dihapus jika sudah lancar)
+    // echo "Koneksi Cloud Supabase Sukses Terbuka!";
 } catch (PDOException $e) {
-    die("Koneksi gagal: " . $e->getMessage());
+    die("Koneksi cloud database gagal: " . $e->getMessage());
 }
 ?>
