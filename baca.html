@@ -1,0 +1,113 @@
+<!DOCTYPE html>/* Gaya Kotak Iklan Pendapatan Tinggi */
+.box-iklan-baca {
+    background-color: #f9f9f9;
+    border: 1px dashed #ddd;
+    padding: 10px;
+    margin: 15px 0;
+    text-align: center;
+    border-radius: 6px;
+}
+.label-iklan {
+    display: block;
+    font-size: 10px;
+    color: #aaa;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baca Berita - FYP News</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #fafafa; margin: 0; padding: 0; line-height: 1.6; }
+        header { background-color: #000; color: #fff; padding: 15px 0; text-align: center; border-bottom: 4px solid #ff0050; }
+        header a { color: white; text-decoration: none; font-weight: bold; font-size: 20px; }
+        .container { max-width: 600px; margin: 30px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .badge { display: inline-block; background: #ff0050; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .meta { font-size: 13px; color: #777; margin: 15px 0; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .content { font-size: 16px; color: #333; white-space: pre-line; }
+        .btn { display: inline-block; margin-top: 20px; background: #333; color: white; text-decoration: none; padding: 10px 15px; border-radius: 4px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<header><a href="index.html">🔥 FYPNews</a></header>
+
+<div class="container">
+    <div id="loading">Memuat konten berita...</div>
+    <div id="box-berita" style="display: none;">
+        <span class="badge" id="kategori"></span>
+        <h1 id="judul" style="margin: 10px 0 0 0;"></h1>
+        <div class="meta">👁️ Dilihat: <strong id="views">0</strong> kali</div>
+        <div class="content" id="isi"></div>
+            <h1 id="judul" style="margin: 10px 0 0 0;"></h1>
+    <div class="meta">👁️ Dilihat: <strong id="views">0</strong> kali</div>
+    
+    <!-- SLOT IKLAN DI BAWAH JUDUL (KLIK TERTINGGI) -->
+    <div class="box-iklan-baca">
+        <span class="label-iklan">ADVERTISEMENT</span>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="5556667777"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div class="content" id="isi"></div>
+
+        <a href="index.html" class="btn">⬅️ Kembali ke Home</a>
+    </div>
+</div>
+
+<script>
+    // MASUKKAN URL & KEY SUPABASE ASLI ANDA DI SINI
+    const SUPABASE_URL = "https://id_proyek_anda.supabase.co"; 
+    const SUPABASE_KEY = "sb_secret_Xc-d0IxQ-NgbzRSiJS3E5w_8VbQiMCP"; 
+
+    const headers = { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json" };
+
+    // Ambil ID dari URL browser (baca.html?id=...)
+    const params = new URLSearchParams(window.location.search);
+    const idBerita = params.get('id');
+
+    async function muatIsiBerita() {
+        if (!idBerita) return;
+        try {
+            // 1. Ambil data berita berdasarkan ID
+            const respon = await fetch(`${SUPABASE_URL}/rest/v1/articles?id=eq.${idBerita}`, { headers });
+            const data = await respon.json();
+            if (data.length === 0) { document.getElementById('loading').innerText = "Berita tidak ditemukan!"; return; }
+            
+            const berita = data[0];
+            const viewsTerbaru = (berita.views || 0) + 1;
+
+            // 2. LOGIKA FYP: Update jumlah views bertambah +1 di Supabase
+            await fetch(`${SUPABASE_URL}/rest/v1/articles?id=eq.${idBerita}`, {
+                method: 'PATCH',
+                headers: headers,
+                body: JSON.stringify({ views: viewsTerbaru })
+            });
+
+            // Tampilkan ke halaman HTML
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('kategori').innerText = berita.category;
+            document.getElementById('judul').innerText = berita.title;
+            document.getElementById('views').innerText = viewsTerbaru;
+            document.getElementById('isi').innerText = berita.content;
+            document.getElementById('box-berita').style.display = 'block';
+
+        } catch (error) {
+            document.getElementById('loading').innerText = "Gagal memuat berita.";
+        }
+    }
+    muatIsiBerita();
+</script>
+</body>
+</html>

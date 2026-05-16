@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Berita Viral</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .box { max-width: 500px; background: white; padding: 20px; margin: auto; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        textarea { height: 120px; }
+        button { background-color: #ff0050; color: white; border: none; padding: 12px; font-weight: bold; width: 100%; cursor: pointer; border-radius: 4px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>Tulis Berita Viral Baru 🔥</h2>
+    <div id="notif"></div>
+    <form id="form-berita">
+        <label>Judul Berita</label>
+        <input type="text" id="title" placeholder="Ketik judul yang bikin penasaran..." required>
+        
+        <label>Kategori</label>
+        <select id="category" required>
+            <option value="Hiburan">Hiburan / Gosip</option>
+            <option value="Teknologi">Teknologi / Gadget</option>
+            <option value="Politik">Politik / Sosial</option>
+        </select>
+
+        <label>Isi Berita</label>
+        <textarea id="content" placeholder="Tulis berita lengkap di sini..." required></textarea>
+
+        <button type="submit">Publish Sekarang</button>
+    </form>
+    <p><a href="index.html">➡️ Lihat Halaman Depan Website</a></p>
+</div>
+
+<script>
+    // MASUKKAN URL & KEY SUPABASE ASLI ANDA DI SINI
+    const SUPABASE_URL = "https://id_proyek_anda.supabase.co"; 
+    const SUPABASE_KEY = "sb_secret_Xc-d0IxQ-NgbzRSiJS3E5w_8VbQiMCP"; 
+
+    document.getElementById('form-berita').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const notif = document.getElementById('notif');
+        notif.innerHTML = "Sedang memproses...";
+
+        const dataBerita = {
+            title: document.getElementById('title').value,
+            category: document.getElementById('category').value,
+            content: document.getElementById('content').value,
+            views: 0
+        };
+
+        try {
+            const respon = await fetch(`${SUPABASE_URL}/rest/v1/articles`, {
+                method: 'POST',
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`,
+                    "Content-Type": "application/json",
+                    "Prefer": "return=minimal"
+                },
+                body: JSON.stringify(dataBerita)
+            });
+
+            if(respon.ok) {
+                notif.innerHTML = "<span style='color:green;font-weight:bold;'>🔥 Berita Sukses Ditambahkan!</span>";
+                document.getElementById('form-berita').reset();
+            } else {
+                throw new Error("Gagal mengirim data");
+            }
+        } catch (error) {
+            notif.innerHTML = "<span style='color:red;'>Terjadi kesalahan sistem.</span>";
+        }
+    });
+</script>
+</body>
+</html>

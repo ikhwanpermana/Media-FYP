@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FYP News - Portal Viral HTML</title>
+    <style>
+        /* Gaya untuk Slot Iklan Profesional */
+.box-iklan-atas, .box-iklan-tengah {
+    background-color: #f9f9f9;
+    border: 1px dashed #ddd;
+    padding: 10px;
+    margin: 20px 0;
+    text-align: center;
+    border-radius: 6px;
+    min-height: 90px; /* Menjaga tata letak agar tidak melompat saat iklan dimuat */
+}
+.label-iklan {
+    display: block;
+    font-size: 10px;
+    color: #aaa;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+        body { font-family: Arial, sans-serif; background-color: #fafafa; margin: 0; padding: 0; }
+        header { background-color: #000; color: #fff; text-align: center; padding: 20px 0; border-bottom: 4px solid #ff0050; }
+        header span { color: #00f2fe; }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        .fyp-section { background: #ffe5ec; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #ff0050; }
+        .card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .badge { background: #ff0050; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .btn { display: inline-block; background: #000; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px; font-size: 13px; margin-top: 10px; }
+    </style>
+        <!-- Skrip Utama Google AdSense -->
+    <script async src="https://googlesyndication.com" crossorigin="anonymous"></script>
+</head>
+
+</head>
+<body>
+
+<header>
+    <h1>🔥 FYP<span>News</span></h1>
+    <p>Portal Berita Viral Tanpa Server Lokal</p>
+</header>
+
+<div class="container">
+    <div class="container">
+    <!-- SLOT IKLAN BANNER ATAS (RESPONSIF) -->
+    <div class="box-iklan-atas">
+        <span class="label-iklan">SPONSORED ADVERTISEMENT</span>
+        <a href="https://wa.me" target="_blank">
+    <img src="https://placeholder.com" style="width:100%; max-width:728px; height:auto; border-radius:4px;" alt="Pasang Iklan">
+</a>
+
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <!-- Area Berita Terpopuler / FYP -->
+    <div class="fyp-section">
+        <h2>Trending FYP ⚡</h2>
+        <div id="loading-fyp">Memuat berita viral...</div>
+        <div id="konten-fyp"></div>
+    </div>
+
+    </div> <!-- Akhir fyp-section -->
+
+    <!-- SLOT IKLAN TENHAG (MENARIK PERHATIAN) -->
+    <div class="box-iklan-tengah">
+        <span class="label-iklan">ADVERTISEMENT</span>
+        <ins class="adsbygoogle"
+             style="display:block; text-align:center;"
+             data-ad-layout="in-article"
+             data-ad-format="fluid"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="0987654321"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <!-- Area Semua Berita Terbaru -->
+    <h2>Berita Terbaru</h2>
+
+
+
+    <!-- Area Semua Berita Terbaru -->
+    <h2>Berita Terbaru</h2>
+    <div id="loading-semua">Memuat berita terbaru...</div>
+    <div id="konten-semua"></div>
+</div>
+
+<script>
+  // GANTI DENGAN URL & KEY SUPABASE ASLI ANDA
+const SUPABASE_URL = "https://ID_PROYEK_ANDA.supabase.co";
+const SUPABASE_KEY = "sb_secret_Xc-d0IxQ-NgbzRSiJS3E5w_8VbQiMCP";
+
+const headers = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": `Bearer ${SUPABASE_KEY}`
+};
+
+// 1. Ambil Berita FYP (Views Terbanyak)
+async function ambilBeritaFYP() {
+    try {
+        const respon = await fetch(`${SUPABASE_URL}/rest/v1/articles?select=*&order=views.desc&limit=2`, { headers });
+        if (!respon.ok) throw new Error("Respon server bermasalah");
+        
+        const data = await respon.json();
+        document.getElementById('loading-fyp').style.display = 'none';
+        
+        let html = '';
+        if (data.length === 0) {
+            document.getElementById('konten-fyp').innerHTML = "<p>Belum ada tren FYP saat ini.</p>";
+            return;
+        }
+        data.forEach(berita => {
+            html += `
+                <div class="card">
+                    <span class="badge">🔥 ${berita.views || 0} Klik</span>
+                    <h3>${berita.title || 'Tanpa Judul'}</h3>
+                    <a href="baca.html?id=${berita.id}" class="btn">Baca Berita</a>
+                </div>
+            `;
+        });
+        document.getElementById('konten-fyp').innerHTML = html;
+    } catch (error) {
+        console.error(error);
+        document.getElementById('loading-fyp').innerHTML = `<span style="color:red;">Gagal memuat tren FYP: ${error.message}</span>`;
+    }
+}
+
+// 2. Ambil Semua Berita Terbaru
+async function ambilSemuaBerita() {
+    try {
+        const respon = await fetch(`${SUPABASE_URL}/rest/v1/articles?select=*&order=created_at.desc`, { headers });
+        if (!respon.ok) throw new Error("Respon server bermasalah");
+
+        const data = await respon.json();
+        document.getElementById('loading-semua').style.display = 'none';
+        
+        let html = '';
+        if(data.length === 0) {
+            document.getElementById('konten-semua').innerHTML = '<p>Belum ada berita terbaru yang diterbitkan.</p>';
+            return;
+        }
+        data.forEach(berita => {
+            html += `
+                <div class="card">
+                    <span class="badge" style="background:#333">${berita.category || 'Umum'}</span>
+                    <h3>${berita.title || 'Tanpa Judul'}</h3>
+                    <p>${berita.content ? berita.content.substring(0, 100) : ''}...</p>
+                    <a href="baca.html?id=${berita.id}" class="btn">Selengkapnya</a>
+                </div>
+            `;
+        });
+        document.getElementById('konten-semua').innerHTML = html;
+    } catch (error) {
+        console.error(error);
+        document.getElementById('loading-semua').innerHTML = `<span style="color:red;">Gagal memuat berita: ${error.message}</span>`;
+    }
+}
+
+// Jalankan fungsi otomatis
+ambilBeritaFYP();
+ambilSemuaBerita();
+  
+    
+
+</body>
+</html>
