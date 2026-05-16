@@ -212,5 +212,30 @@
         ambilBeritaFYP();
         ambilSemuaBerita();
     </script>
+<!-- ADROLL SMART PIXEL START -->
+<script type="text/javascript">
+    adroll_adv_id = "O6EY6PVNPJD73FTVPMDXXK";
+    adroll_pix_id = "4RGDQOQQ7NCGXLCOE7WEIW";
+    adroll_version = "2.0";
+
+    (function(w, d, e, o, a) {
+        w.__adroll_loaded = true;
+        w.adroll = w.adroll || [];
+        w.adroll.f = [ 'setProperties', 'identify', 'track' ];
+        var roundtripUrl = "https://adroll.com" + adroll_adv_id + "/roundtrip.js";
+        for (a = 0; a < w.adroll.f.length; a++) {
+            w.adroll[w.adroll.f[a]] = (function(n) {
+                return function() { w.adroll.push([ n, arguments ]) }
+            })(w.adroll.f[a])
+        }
+        e = d.createElement('script');
+        o = d.getElementsByTagName('script')[0];
+        e.async = 1;
+        e.src = roundtripUrl;
+        o.parentNode.insertBefore(e, o);
+    })(window, document);
+</script>
+<!-- ADROLL SMART PIXEL END -->
+
 </body>
 </html>
