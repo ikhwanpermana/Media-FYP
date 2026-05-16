@@ -51,8 +51,26 @@
         /* REKAYASA TOMBOL SOSIAL MEDIA */
         .share-box { margin-top: 35px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
         .share-title { font-size: 14px; font-weight: 700; color: var(--text-dark); }
-        .share-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-share { text-decoration: none; color: white; padding: 10px 16px; font-size: 13px; font-weight: 700; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; }
+        /* Gaya Tombol Share Media Sosial Premium */
+.share-box { 
+    margin-top: 35px; 
+    padding: 20px; 
+    background: #f8fafc; 
+    border-radius: 12px; 
+    border: 1px solid var(--border); 
+}
+.share-title { font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; display: block; }
+.share-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.btn-share { text-decoration: none; color: white; padding: 10px; font-size: 12px; font-weight: 700; border-radius: 8px; text-align: center; transition: all 0.2s; display: block; }
+.btn-share:hover { transform: translateY(-2px); opacity: 0.9; }
+
+/* Warna Identitas Brand Sosmed */
+.btn-wa { background: #25D366; }      /* WhatsApp */
+.btn-tt { background: #000000; border: 1px solid #333; } /* TikTok */
+.btn-fb { background: #1877F2; }      /* Facebook */
+.btn-yt { background: #FF0000; }      /* YouTube */
+.btn-tw { background: #14171A; }      /* Twitter / X */
+
         .btn-wa { background: #25D366; }
         .btn-fb { background: #1877F2; }
 
@@ -107,15 +125,19 @@
                     <div style="color: #94a3b8; font-size: 13px; padding: 15px 0; font-weight: 600;">IKLAN BAWAH ARTIKEL (MATCHED CONTENT)</div>
                 </div>
 
-                <!-- TOMBOL BAGIKAN BIAR MAKIN VIRAL -->
-                <div class="share-box">
-                    <span class="share-title">BAGIKAN INFO VIRAL INI:</span>
-                    <div class="share-buttons">
-                        <a href="#" id="share-wa" target="_blank" class="btn-share btn-wa">🟢 WhatsApp</a>
-                        <a href="#" id="share-fb" target="_blank" class="btn-share btn-fb">🔵 Facebook</a>
-                    </div>
-                </div>
-            </article>
+                <!-- TOMBOL BAGIKAN LENGKAP BIAR MAKIN VIRAL -->
+<div class="share-box">
+    <span class="share-title">📢 SEBARKAN INFO VIRAL INI SEKARANG:</span>
+    <div class="share-buttons">
+        <a href="#" id="share-wa" target="_blank" class="btn-share btn-wa">🟢 WhatsApp</a>
+        <a href="#" id="share-tt" target="_blank" class="btn-share btn-tt">🎵 TikTok</a>
+        <a href="#" id="share-fb" target="_blank" class="btn-share btn-fb">🔵 Facebook</a>
+        <a href="#" id="share-yt" target="_blank" class="btn-share btn-yt">🔴 YouTube</a>
+        <a href="#" id="share-tw" target="_blank" class="btn-share btn-tw">⚫ Twitter / X</a>
+    </div>
+</div>
+
+                            </article>
         </main>
 
         <!-- SIDEBAR KANAN -->
@@ -173,10 +195,22 @@
                     document.getElementById('waktu').innerText = tgl.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
                 }
 
-                // AKTIFKAN LOGIKA TOMBOL VIRAL SHARE
-                const urlSitus = window.location.href;
-                document.getElementById('share-wa').href = `https://whatsapp.com{encodeURIComponent(berita.title)}+-+${encodeURIComponent(urlSitus)}`;
-                document.getElementById('share-fb').href = `https://facebook.com{encodeURIComponent(urlSitus)}`;
+               // AMBIL URL DAN JUDUL AKTIF UNTUK CO-SHARE SOSIAL MEDIA
+const urlSitus = window.location.href;
+const teksBerita = `BACA BERITA VIRAL INI: ${berita.title}`;
+
+// Logika Tautan API Masing-Masing Platform
+document.getElementById('share-wa').href = `https://whatsapp.com{encodeURIComponent(teksBerita)}+-+${encodeURIComponent(urlSitus)}`;
+document.getElementById('share-fb').href = `https://facebook.com{encodeURIComponent(urlSitus)}`;
+document.getElementById('share-tw').href = `https://twitter.com{encodeURIComponent(teksBerita)}&url=${encodeURIComponent(urlSitus)}`;
+
+// Trik Khusus Untuk TikTok & YouTube (Membuka Halaman Kreator / Tempel Tautan)
+document.getElementById('share-tt').href = `https://tiktok.com`; 
+document.getElementById('share-yt').href = `https://youtube.com`; 
+
+// Catatan Edukasi: TikTok dan YouTube tidak menyediakan API klik-share teks murni seperti WA/FB. 
+// Tombol TikTok & YouTube di atas dikonfigurasi untuk langsung mengarahkan Anda atau pembaca ke halaman upload/studio mereka 
+// guna membuat konten reaksi pendek (VT/Shorts) sambil menyertakan link berita fyp Anda di kolom bio/deskripsi mereka.
 
                 document.getElementById('box-berita').style.display = 'block';
 
