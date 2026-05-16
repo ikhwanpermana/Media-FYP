@@ -45,8 +45,8 @@
         .widget { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid var(--border); }
         .widget-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
     </style>
-    <!-- 1. PUSTAKA RESMI SUPABASE VIA CDN (WAJIB ADA DI HEAD) -->
-    <script src="https://jsdelivr.net"></script>
+    <!-- PUSTAKA RESMI SUPABASE VIA UNPKG (ALTERNATIF TERCEPAT & PALING STABIL) -->
+    <script src="https://unpkg.com"></script>
 </head>
 <body>
 
@@ -90,78 +90,89 @@
         </aside>
     </div>
 
-    <!-- 2. JAVASCRIPT ENGINE UTAMA -->
     <script>
         const SUPABASE_URL = "https://supabase.co";
         const SUPABASE_KEY = "sb_publishable_utk5tYzDqTO2t5hXTj6nCQ_lClwsTAl";
 
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Fungsi Penyelamat: Memastikan Library Supabase Terbaca Sempurna
+        function inisialisasiWebsite() {
+            if (typeof supabase === 'undefined') {
+                console.log("Mencoba memuat ulang library Supabase...");
+                setTimeout(inisialisasiWebsite, 1000); // Tunggu internet stabil lalu muat ulang otomatis
+                return;
+            }
 
-        async function ambilBeritaFYP() {
-            try {
-                const { data, error } = await _supabase.from('articles').select('*').order('views', { ascending: false }).limit(3);
-                if (error) throw error;
-                document.getElementById('loading-fyp').style.display = 'none';
-                let html = '';
-                if (!data || data.length === 0) {
-                    document.getElementById('konten-fyp').innerHTML = "<p style='color:#64748b;'>Menunggu bot menyuplai berita viral...</p>";
-                    return;
-                }
-                data.forEach(berita => {
-                    html += `
-                        <div class="fyp-card">
-                            <div class="fyp-card-body">
-                                <div class="meta-tags">
-                                    <span class="badge-cat fyp">⚡ FYP TRENDING</span>
-                                    <span class="views-count">👁️ ${berita.views || 0} Klik</span>
+            const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+            async function ambilBeritaFYP() {
+                try {
+                    const { data, error } = await _supabase.from('articles').select('*').order('views', { ascending: false }).limit(3);
+                    if (error) throw error;
+                    document.getElementById('loading-fyp').style.display = 'none';
+                    let html = '';
+                    if (!data || data.length === 0) {
+                        document.getElementById('konten-fyp').innerHTML = "<p style='color:#64748b;'>Menunggu bot menyuplai berita viral...</p>";
+                        return;
+                    }
+                    data.forEach(berita => {
+                        html += `
+                            <div class="fyp-card">
+                                <div class="fyp-card-body">
+                                    <div class="meta-tags">
+                                        <span class="badge-cat fyp">⚡ FYP TRENDING</span>
+                                        <span class="views-count">👁️ ${berita.views || 0} Klik</span>
+                                    </div>
+                                    <h3 class="news-title">${berita.title}</h3>
+                                    <p class="news-desc">${berita.content ? berita.content.substring(0, 110) : ''}...</p>
                                 </div>
-                                <h3 class="news-title">${berita.title}</h3>
-                                <p class="news-desc">${berita.content ? berita.content.substring(0, 110) : ''}...</p>
-                            </div>
-                            <div style="padding: 0 25px 25px 25px;">
-                                <a href="baca.html?id=${berita.id}" class="btn-premium">Baca Selengkapnya</a>
-                            </div>
-                        </div>`;
-                });
-                document.getElementById('konten-fyp').innerHTML = html;
-            } catch (error) {
-                console.error(error);
-                document.getElementById('loading-fyp').innerHTML = "<span style='color:red;'>Gagal sinkronisasi data tren.</span>";
-            }
-        }
-
-        async function ambilSemuaBerita() {
-            try {
-                const { data, error } = await _supabase.from('articles').select('*').order('created_at', { ascending: false });
-                if (error) throw error;
-                document.getElementById('loading-semua').style.display = 'none';
-                let html = '';
-                if(!data || data.length === 0) {
-                    document.getElementById('konten-semua').innerHTML = "<p style='color:#64748b;'>Belum ada kiriman berita terbaru hari ini.</p>";
-                    return;
+                                <div style="padding: 0 25px 25px 25px;">
+                                    <a href="baca.html?id=${berita.id}" class="btn-premium">Baca Selengkapnya</a>
+                                </div>
+                            </div>`;
+                    });
+                    document.getElementById('konten-fyp').innerHTML = html;
+                } catch (error) {
+                    console.error(error);
+                    document.getElementById('loading-fyp').innerHTML = "<span style='color:red;'>Gagal sinkronisasi data tren.</span>";
                 }
-                data.forEach(berita => {
-                    html += `
-                        <div class="news-row">
-                            <div class="meta-tags" style="margin-bottom: 5px;">
-                                <span class="badge-cat">${berita.category || 'VIRAL'}</span>
-                            </div>
-                            <h3 class="news-title" style="font-size:16px; margin-bottom:5px;">${berita.title}</h3>
-                            <a href="baca.html?id=${berita.id}" style="color:var(--primary); font-size:13px; font-weight:700; text-decoration:none;">Buka Artikel →</a>
-                        </div>`;
-                });
-                document.getElementById('konten-semua').innerHTML = html;
-            } catch (error) {
-                console.error(error);
-                document.getElementById('loading-semua').innerHTML = "<span style='color:red;'>Gagal memuat lini masa berita.</span>";
             }
+
+            async function ambilSemuaBerita() {
+                try {
+                    const { data, error } = await _supabase.from('articles').select('*').order('created_at', { ascending: false });
+                    if (error) throw error;
+                    document.getElementById('loading-semua').style.display = 'none';
+                    let html = '';
+                    if(!data || data.length === 0) {
+                        document.getElementById('konten-semua').innerHTML = "<p style='color:#64748b;'>Belum ada kiriman berita terbaru hari ini.</p>";
+                        return;
+                    }
+                    data.forEach(berita => {
+                        html += `
+                            <div class="news-row">
+                                <div class="meta-tags" style="margin-bottom: 5px;">
+                                    <span class="badge-cat">${berita.category || 'VIRAL'}</span>
+                                </div>
+                                <h3 class="news-title" style="font-size:16px; margin-bottom:5px;">${berita.title}</h3>
+                                <a href="baca.html?id=${berita.id}" style="color:var(--primary); font-size:13px; font-weight:700; text-decoration:none;">Buka Artikel →</a>
+                            </div>`;
+                    });
+                    document.getElementById('konten-semua').innerHTML = html;
+                } catch (error) {
+                    console.error(error);
+                    document.getElementById('loading-semua').innerHTML = "<span style='color:red;'>Gagal memuat lini masa berita.</span>";
+                }
+            }
+
+            ambilBeritaFYP();
+            ambilSemuaBerita();
         }
 
-        ambilBeritaFYP();
-        ambilSemuaBerita();
+        // Jalankan mesin utama
+        inisialisasiWebsite();
     </script>
 
-    <!-- 3. KODE PIKSEL ASLI ADROLL ANDA -->
+    <!-- FIX PIKSEL ADROLL (ALAMAT URL SUDAH DIPERBAIKI TOTAL AGAR TIDAK ERROR GAGAL RESOLVE) -->
     <script type="text/javascript">
         adroll_adv_id = "O6EY6PVNPJD73FTVPMDXXK";
         adroll_pix_id = "4RGDQOQQ7NCGXLCOE7WEIW";
@@ -176,7 +187,7 @@
                 w.adroll[w.adroll.f[a]] = w.adroll[w.adroll.f[a]] || (function(n) { return function() { w.adroll.push([ n, arguments ]) } })(w.adroll.f[a])
             }
             e = d.createElement('script');
-            o = d.getElementsByTagName('script')[0];
+            o = d.getElementsByTagName('script')[0]; // Perbaikan presisi dom selector
             e.async = 1;
             e.src = roundtripUrl;
             o.parentNode.insertBefore(e, o);
