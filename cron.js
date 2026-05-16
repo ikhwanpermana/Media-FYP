@@ -1,6 +1,6 @@
 // Script Otomatis Kolektor Berita Viral
-const SUPABASE_URL = "https://id_proyek_anda.supabase.co"; 
-const SUPABASE_KEY = "sb_publishable_anda..."; 
+const SUPABASE_URL = "https://mqxpzsnunxfpizajvsrd.supabase.co"; 
+const SUPABASE_KEY = "sb_secret_Xc-d0IxQ-NgbzRSiJS3E5w_8VbQiMCP"; 
 
 async function ambilBeritaViral() {
     console.log("Memulai pencarian berita fyp...");
