@@ -1,113 +1,191 @@
-<!DOCTYPE html>/* Gaya Kotak Iklan Pendapatan Tinggi */
-.box-iklan-baca {
-    background-color: #f9f9f9;
-    border: 1px dashed #ddd;
-    padding: 10px;
-    margin: 15px 0;
-    text-align: center;
-    border-radius: 6px;
-}
-.label-iklan {
-    display: block;
-    font-size: 10px;
-    color: #aaa;
-    letter-spacing: 1px;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baca Berita - FYP News</title>
+    <title>Memuat Berita... - FYPNews</title>
+    <!-- Google Fonts Premium -->
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #fafafa; margin: 0; padding: 0; line-height: 1.6; }
-        header { background-color: #000; color: #fff; padding: 15px 0; text-align: center; border-bottom: 4px solid #ff0050; }
-        header a { color: white; text-decoration: none; font-weight: bold; font-size: 20px; }
-        .container { max-width: 600px; margin: 30px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .badge { display: inline-block; background: #ff0050; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-        .meta { font-size: 13px; color: #777; margin: 15px 0; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .content { font-size: 16px; color: #333; white-space: pre-line; }
-        .btn { display: inline-block; margin-top: 20px; background: #333; color: white; text-decoration: none; padding: 10px 15px; border-radius: 4px; font-size: 14px; }
+        :root {
+            --primary: #ff0050;      /* Merah TikTok */
+            --secondary: #00f2fe;    /* Biru Cyan Cyber */
+            --dark: #0f172a;         /* Hitam Slate */
+            --light: #f8fafc;        /* Abu Terang */
+            --border: #e2e8f0;
+            --text-main: #334155;
+            --text-dark: #0f172a;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--light); color: var(--text-main); line-height: 1.8; }
+
+        /* HEADER & NAVIGASI */
+        header { background-color: var(--dark); color: white; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
+        .logo { font-size: 24px; font-weight: 800; text-decoration: none; color: white; }
+        .logo span { color: var(--primary); }
+        .btn-home-nav { background: rgba(255,255,255,0.1); color: white; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        .btn-home-nav:hover { background: var(--primary); }
+
+        /* LAYOUT ARTIKEL */
+        .main-layout { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
+
+        /* KONTEN ARTIKEL VVIP */
+        article { background: white; padding: 35px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid var(--border); }
+        @media (max-width: 600px) { article { padding: 20px; } }
+        
+        .badge-cat { display: inline-block; background: var(--dark); color: white; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; }
+        .badge-cat.active { background: linear-gradient(45deg, var(--primary), #b9003a); }
+        
+        h1 { font-size: 30px; font-weight: 800; color: var(--text-dark); line-height: 1.3; margin-bottom: 15px; }
+        @media (max-width: 600px) { h1 { font-size: 24px; } }
+
+        .meta-info { display: flex; flex-wrap: wrap; gap: 15px; font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .meta-info strong { color: var(--text-dark); }
+
+        /* AREA TEKS ISI BERITA */
+        .article-body { font-size: 16px; color: #334155; white-space: pre-line; text-align: justify; }
+
+        /* REKAYASA TOMBOL SOSIAL MEDIA */
+        .share-box { margin-top: 35px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+        .share-title { font-size: 14px; font-weight: 700; color: var(--text-dark); }
+        .share-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-share { text-decoration: none; color: white; padding: 10px 16px; font-size: 13px; font-weight: 700; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-wa { background: #25D366; }
+        .btn-fb { background: #1877F2; }
+
+        /* STRUKTUR SLOT IKLAN */
+        .ad-wrapper { background: #f1f5f9; border: 2px dashed #cbd5e1; padding: 15px; text-align: center; border-radius: 12px; margin: 25px 0; position: relative; }
+        .ad-label { position: absolute; top: -10px; left: 20px; background: #cbd5e1; color: #475569; font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px; letter-spacing: 1px; }
+
+        /* SIDEBAR */
+        .sidebar { display: flex; flex-direction: column; gap: 25px; }
+        .widget { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); border: 1px solid var(--border); }
+        .widget-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
     </style>
 </head>
 <body>
 
-<header><a href="index.html">🔥 FYPNews</a></header>
+    <!-- NAVIGASI -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">⚡ FYP<span>News</span></a>
+            <a href="index.html" class="btn-home-nav">← Beranda</a>
+        </div>
+    </header>
 
-<div class="container">
-    <div id="loading">Memuat konten berita...</div>
-    <div id="box-berita" style="display: none;">
-        <span class="badge" id="kategori"></span>
-        <h1 id="judul" style="margin: 10px 0 0 0;"></h1>
-        <div class="meta">👁️ Dilihat: <strong id="views">0</strong> kali</div>
-        <div class="content" id="isi"></div>
-            <h1 id="judul" style="margin: 10px 0 0 0;"></h1>
-    <div class="meta">👁️ Dilihat: <strong id="views">0</strong> kali</div>
-    
-    <!-- SLOT IKLAN DI BAWAH JUDUL (KLIK TERTINGGI) -->
-    <div class="box-iklan-baca">
-        <span class="label-iklan">ADVERTISEMENT</span>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-             data-ad-slot="5556667777"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-
-    <div class="content" id="isi"></div>
-
-        <a href="index.html" class="btn">⬅️ Kembali ke Home</a>
-    </div>
-</div>
-
-<script>
-    // MASUKKAN URL & KEY SUPABASE ASLI ANDA DI SINI
-    const SUPABASE_URL = "https://id_proyek_anda.supabase.co"; 
-    const SUPABASE_KEY = "sb_secret_Xc-d0IxQ-NgbzRSiJS3E5w_8VbQiMCP"; 
-
-    const headers = { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json" };
-
-    // Ambil ID dari URL browser (baca.html?id=...)
-    const params = new URLSearchParams(window.location.search);
-    const idBerita = params.get('id');
-
-    async function muatIsiBerita() {
-        if (!idBerita) return;
-        try {
-            // 1. Ambil data berita berdasarkan ID
-            const respon = await fetch(`${SUPABASE_URL}/rest/v1/articles?id=eq.${idBerita}`, { headers });
-            const data = await respon.json();
-            if (data.length === 0) { document.getElementById('loading').innerText = "Berita tidak ditemukan!"; return; }
+    <!-- MAIN LAYOUT -->
+    <div class="main-layout">
+        
+        <!-- KOLOM UTAMA (BERITA) -->
+        <main>
+            <div id="loading" style="color: #64748b; font-weight: 600;">Sedang memuat artikel viral...</div>
             
-            const berita = data[0];
-            const viewsTerbaru = (berita.views || 0) + 1;
+            <article id="box-berita" style="display: none;">
+                <span class="badge-cat active" id="kategori">VIRAL</span>
+                <h1 id="judul"></h1>
+                
+                <div class="meta-info">
+                    <span>🕒 Rilis: <strong id="waktu">--/--/----</strong></span>
+                    <span>👁️ Pembaca: <strong id="views">0</strong> Kali</span>
+                </div>
 
-            // 2. LOGIKA FYP: Update jumlah views bertambah +1 di Supabase
-            await fetch(`${SUPABASE_URL}/rest/v1/articles?id=eq.${idBerita}`, {
-                method: 'PATCH',
-                headers: headers,
-                body: JSON.stringify({ views: viewsTerbaru })
-            });
+                <!-- SLOT IKLAN 1: DI BAWAH JUDUL (KLIK TERTINGGI) -->
+                <div class="ad-wrapper">
+                    <span class="ad-label">ADVERTISEMENT</span>
+                    <div style="color: #94a3b8; font-size: 13px; padding: 15px 0; font-weight: 600;">IKLAN PREMIUM BAWAH JUDUL (HIGH CTR)</div>
+                </div>
 
-            // Tampilkan ke halaman HTML
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('kategori').innerText = berita.category;
-            document.getElementById('judul').innerText = berita.title;
-            document.getElementById('views').innerText = viewsTerbaru;
-            document.getElementById('isi').innerText = berita.content;
-            document.getElementById('box-berita').style.display = 'block';
+                <!-- ISI KONTEN -->
+                <div class="article-body" id="isi"></div>
 
-        } catch (error) {
-            document.getElementById('loading').innerText = "Gagal memuat berita.";
+                <!-- SLOT IKLAN 2: DI BAWAH ARTIKEL -->
+                <div class="ad-wrapper">
+                    <span class="ad-label">SPONSORED AD</span>
+                    <div style="color: #94a3b8; font-size: 13px; padding: 15px 0; font-weight: 600;">IKLAN BAWAH ARTIKEL (MATCHED CONTENT)</div>
+                </div>
+
+                <!-- TOMBOL BAGIKAN BIAR MAKIN VIRAL -->
+                <div class="share-box">
+                    <span class="share-title">BAGIKAN INFO VIRAL INI:</span>
+                    <div class="share-buttons">
+                        <a href="#" id="share-wa" target="_blank" class="btn-share btn-wa">🟢 WhatsApp</a>
+                        <a href="#" id="share-fb" target="_blank" class="btn-share btn-fb">🔵 Facebook</a>
+                    </div>
+                </div>
+            </article>
+        </main>
+
+        <!-- SIDEBAR KANAN -->
+        <aside class="sidebar">
+            <div class="widget">
+                <h3 class="widget-title">Iklan Penjelajah</h3>
+                <div class="ad-wrapper" style="margin: 0; padding: 60px 10px;">
+                    <span class="ad-label">SIDEBAR ADS</span>
+                    <div style="color: #94a3b8; font-size: 12px; font-weight: bold;">SLOT BANNER VERTIKAL 300x250</div>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+        // MASUKKAN ALAMAT URL & KEY SUPABASE ASLI ANDA
+        const SUPABASE_URL = "https://mqxpzsnunxfpizajvsrd.supabase.co"; // <-- URL asli Anda sudah terpasang
+        const SUPABASE_KEY = "sb_secret_Xc-d0IxQ-NgbzRSiJS3E5w_8VbQiMCP"; // <-- Ganti dengan Kunci Publishable Anda
+
+        const headers = { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`, "Content-Type": "application/json" };
+
+        const params = new URLSearchParams(window.location.search);
+        const idBerita = params.get('id');
+
+        async function muatIsiBerita() {
+            if (!idBerita) return;
+            try {
+                // 1. Ambil data dari Supabase
+                const respon = await fetch(`${SUPABASE_URL}/rest/v1/articles?id=eq.${idBerita}`, { headers });
+                const data = await respon.json();
+                if (data.length === 0) { document.getElementById('loading').innerText = "Konten FYP telah dihapus atau tidak ditemukan!"; return; }
+                
+                const berita = data[0];
+                const viewsTerbaru = (berita.views || 0) + 1;
+
+                // 2. Kirim update views (+1) ke Supabase
+                await fetch(`${SUPABASE_URL}/rest/v1/articles?id=eq.${idBerita}`, {
+                    method: 'PATCH',
+                    headers: headers,
+                    body: JSON.stringify({ views: viewsTerbaru })
+                });
+
+                // Tampilkan data ke struktur HTML baru yang mewah
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('kategori').innerText = berita.category || "VIRAL";
+                document.getElementById('judul').innerText = berita.title;
+                document.getElementById('views').innerText = viewsTerbaru;
+                document.getElementById('isi').innerText = berita.content;
+                
+                // Atur format tanggal agar rapi
+                if(berita.created_at) {
+                    const tgl = new Date(berita.created_at);
+                    document.getElementById('waktu').innerText = tgl.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                }
+
+                // AKTIFKAN LOGIKA TOMBOL VIRAL SHARE
+                const urlSitus = window.location.href;
+                document.getElementById('share-wa').href = `https://whatsapp.com{encodeURIComponent(berita.title)}+-+${encodeURIComponent(urlSitus)}`;
+                document.getElementById('share-fb').href = `https://facebook.com{encodeURIComponent(urlSitus)}`;
+
+                document.getElementById('box-berita').style.display = 'block';
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('loading').innerText = "Gagal menyinkronkan server berita.";
+            }
         }
-    }
-    muatIsiBerita();
-</script>
+        muatIsiBerita();
+    </script>
 </body>
 </html>
